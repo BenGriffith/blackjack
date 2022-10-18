@@ -19,8 +19,5 @@ class Deck:
 
     cards: List[Card] = field(default_factory=create_deck)
 
-# sole use is for testing - will eventually remove
-if __name__ == "__main__":
-    a = Deck()
-    a.cards[0].rank = "Test"
-    print(a.cards)
+    def __repr__(self):        
+        return f"{self.__class__.__name__}({', '.join(card.__repr__() for card in self.cards)})"

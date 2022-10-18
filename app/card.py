@@ -5,3 +5,6 @@ from dataclasses import dataclass
 class Card:
     suit: str
     rank: str
+
+    def __repr__(self):
+        return f"({self.suit}, {self.rank})"
