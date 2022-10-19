@@ -1,4 +1,5 @@
 bin/
 include/
 lib/
+tests/.pytest_cache
 pyvenv.cfg

@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List
 
-from card import Card
+from .card import Card
 
 
 @dataclass(frozen=True)
