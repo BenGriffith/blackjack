@@ -30,7 +30,7 @@ def deck():
 def test_card(card):
     assert card.suit == "hearts"
     assert card.rank == "5"
-    assert card.__repr__() == "Card(hearts, 5)"
+    assert card.__str__() == "Card(hearts, 5)"
 
 
 def test_card_mutability_error():
@@ -46,7 +46,7 @@ def test_deck_length(deck):
 
 
 def test_deck_repr(deck):
-    assert deck.__repr__() == DECK
+    assert deck.__str__() == DECK
 
 
 def test_deck_card_mutability_error(deck):

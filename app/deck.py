@@ -6,7 +6,7 @@ class Card:
     suit: str
     rank: str
 
-    def __repr__(self):
+    def __str__(self):
         return f"{self.__class__.__name__}({self.suit}, {self.rank})"
 
 
@@ -24,5 +24,5 @@ class Deck:
                 deck.append(Card(suit, card))
         self.cards = deck
 
-    def __repr__(self):        
-        return f"{self.__class__.__name__}({', '.join(card.__repr__() for card in self.cards)})"
+    def __str__(self):        
+        return f"{self.__class__.__name__}({', '.join(card.__str__() for card in self.cards)})"
