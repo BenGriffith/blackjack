@@ -1,7 +1,18 @@
 import pytest
 
-from app.player import Player
+from app.player import Dealer, Player
 
+
+@pytest.fixture
+def dealer():
+    return Dealer()
+
+@pytest.fixture
+def dealer_one(dealer):
+    _dealer = dealer
+    _dealer.score = 5
+    _dealer.hand = "5"
+    return _dealer
 
 @pytest.fixture
 def player():
@@ -9,11 +20,27 @@ def player():
 
 @pytest.fixture
 def player_one(player):
-    player_one = player
-    player_one.score = 1
-    player_one.bet = 10
-    player_one.hand = "K"
-    return player_one
+    _player = player
+    _player.score = 10
+    _player.bet = 10
+    _player.hand = "K"
+    return _player
+
+
+def test_dealer(dealer):
+    assert dealer.score == 0
+    assert dealer.hand == []
+
+
+def test_dealer_valid_update(dealer_one):
+    assert dealer_one.score == 5
+    assert dealer_one.hand == ["5"]
+
+
+def test_dealer_invalid_score(dealer, capsys):
+    dealer.score = -10
+    captured = capsys.readouterr()
+    assert captured.out == "Value should be greater than 0\n"
 
 
 def test_player(player):
@@ -23,7 +50,7 @@ def test_player(player):
 
 
 def test_player_valid_update(player_one):
-    assert player_one.score == 1
+    assert player_one.score == 10
     assert player_one.bet == 10
     assert player_one.hand == ["K"]
 

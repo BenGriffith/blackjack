@@ -1,10 +1,9 @@
 
 
-class Player:
+class Dealer:
 
     def __init__(self):
         self._score = 0
-        self._bet = 0
         self._hand = []
 
     @property
@@ -20,6 +19,22 @@ class Player:
         return self._score
 
     @property
+    def hand(self):
+        return self._hand
+
+    @hand.setter
+    def hand(self, card):
+        self._hand.append(card)
+        return self._hand
+
+
+class Player(Dealer):
+
+    def __init__(self):
+        super().__init__()
+        self._bet = 0
+
+    @property
     def bet(self):
         return self._bet
 
@@ -33,18 +48,3 @@ class Player:
             return
         self._bet += value
         return self._bet
-
-    @property
-    def hand(self):
-        return self._hand
-
-    @hand.setter
-    def hand(self, card):
-        self._hand.append(card)
-        return self._hand
-
-
-# used for prototyping - will be removed
-if __name__ == "__main__":
-    ben = Player()
-    print(ben.score, ben.bet, ben.hand)
