@@ -46,5 +46,5 @@ class Player(Dealer):
         if value < 0:
             print("Please provide a positive integer value")
             return
-        self._bet += value
+        self._bet = value
         return self._bet

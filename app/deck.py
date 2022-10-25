@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from random import shuffle
 
 
 @dataclass(frozen=True)
@@ -22,6 +23,7 @@ class Deck:
         for suit in suits:
             for card in _cards:
                 deck.append(Card(suit, card))
+        shuffle(deck)
         self.cards = deck
 
     def __repr__(self):        
