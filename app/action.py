@@ -1,5 +1,3 @@
-
-
 class Action:
 
     def __init__(self, action, deck, player):
@@ -15,9 +13,7 @@ class Action:
         return True
 
     def hit(self):
-        card = self.deck.cards.pop()
-        self.player.hand = card
-        return
+        self.player.hand = self.deck.cards.pop()
 
     def stand(self):
         pass
@@ -25,4 +21,3 @@ class Action:
     def double_down(self):
         self.player.bet = self.player.bet * self.player.bet
         self.hit()
-        return

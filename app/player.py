@@ -1,10 +1,9 @@
-
-
-class Dealer:
+class Player:
 
     def __init__(self):
         self._score = 0
         self._hand = []
+        self._bet = 0
 
     @property
     def score(self):
@@ -12,9 +11,11 @@ class Dealer:
 
     @score.setter
     def score(self, value):
-        if value < 0:
-            print("Value should be greater than 0")
-            return
+        try:
+            if value < 0:
+                raise ValueError("Value should be greater than 0")
+        except ValueError as value_err:
+            print(value_err.args[0])
         self._score += value
         return self._score
 
@@ -27,24 +28,29 @@ class Dealer:
         self._hand.append(card)
         return self._hand
 
-
-class Player(Dealer):
-
-    def __init__(self):
-        super().__init__()
-        self._bet = 0
-
     @property
     def bet(self):
         return self._bet
 
     @bet.setter
     def bet(self, value):
-        if not isinstance(value, int):
-            print("Please provide an integer value")
-            return
-        if value < 0:
-            print("Please provide a positive integer value")
-            return
+        try:
+            if not isinstance(value, int):
+                raise TypeError("Please provide an integer value")
+        except TypeError as type_err:
+            print(type_err.args[0])
+
+        try:
+            if value < 0:
+                raise ValueError("Please provide a positive integer value")
+        except ValueError as value_err:
+            print(value_err.args[0])
+
         self._bet = value
         return self._bet
+
+
+class Dealer(Player):
+
+    def __init__(self):
+        Player.__init__(self)
