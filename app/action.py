@@ -1,19 +1,11 @@
 class Action:
 
-    def __init__(self, action, deck, player):
+    def __init__(self, deck, person):
         self.deck = deck
-        self.player = player
-
-        if not self.validate_action(action):
-            return
-
-    def validate_action(self, action):
-        if action not in ["hit", "stand", "double down"]:
-            print("Please choose either hit, stand or double down")
-        return True
+        self.person = person
 
     def hit(self):
-        self.player.hand = self.deck.cards.pop()
+        self.person.hand.append(self.deck.cards.pop())
 
     def stand(self):
         pass
