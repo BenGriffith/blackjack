@@ -1,6 +1,3 @@
-from deck import Deck
-from action import Action
-
 class Player:
 
     def __init__(self):
@@ -52,18 +49,15 @@ class Player:
     def deal_card(self, deck, action):
         action(deck, self).hit()
 
+    def __str__(self):
+        return f"{self.__class__.__name__}"
+
 
 class Dealer(Player):
 
     def __init__(self):
         Player.__init__(self)
 
-
-if __name__ == "__main__":
-    ben = Player()
-    ben.bet = 10
-    andrew = Dealer()
-    print(andrew.bet, andrew.score, andrew.hand)
-    deck = Deck()
-    ben.deal_card(deck, Action)
-    print(ben.hand)
+    @property
+    def bet(self):
+        raise AttributeError("Dealer cannot place a bet")
