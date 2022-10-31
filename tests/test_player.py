@@ -46,10 +46,9 @@ def test_dealer_valid_update(dealer_one, deck):
     assert isinstance(dealer_one.hand[0], Card) == True
 
 
-def test_dealer_invalid_score(dealer, capsys):
-    dealer.score = -10
-    captured = capsys.readouterr()
-    assert captured.out == "VALUE ERROR: Value should be greater than 0\n"
+def test_dealer_invalid_score(dealer):
+    with pytest.raises(ValueError):
+        dealer.score = -10
 
 
 def test_dealer_bet(dealer):
@@ -74,17 +73,14 @@ def test_player_valid_update(player_one, deck):
     assert isinstance(player_one.hand[0], Card) == True
 
 
-def test_player_invalid_score(player, capsys):
-    player.score = -10
-    captured = capsys.readouterr()
-    assert captured.out == "VALUE ERROR: Value should be greater than 0\n"
+def test_player_invalid_score(player):
+    with pytest.raises(ValueError):
+        player.score = -10
 
 
-def test_player_invalid_bet(player, capsys):
-    player.bet = "1"
-    captured = capsys.readouterr()
-    assert captured.out == "TYPE ERROR: Please provide an integer value\n"
+def test_player_invalid_bet(player):
+    with pytest.raises(TypeError):
+        player.bet = "1"
 
-    player.bet = -10
-    captured = capsys.readouterr()
-    assert captured.out == "VALUE ERROR: Please provide a positive integer value\n"
+    with pytest.raises(ValueError):
+        player.bet = -10

@@ -11,13 +11,8 @@ class Player:
 
     @score.setter
     def score(self, value):
-        try:
-            if value < 0:
-                raise ValueError("VALUE ERROR", "Value should be greater than 0")
-        except ValueError as value_err:
-            err_type, message = value_err.args
-            print(f"{err_type}: {message}")
-            return
+        if value < 0:
+            raise ValueError()
         self._score += value
         return self._score
 
@@ -27,22 +22,11 @@ class Player:
 
     @bet.setter
     def bet(self, value):
-        try:
-            if not isinstance(value, int):
-                raise TypeError("TYPE ERROR", "Please provide an integer value")
-        except TypeError as type_err:
-            err_type, message = type_err.args
-            print(f"{err_type}: {message}")
-            return
+        if not isinstance(value, int):
+            raise TypeError()
 
-        try:
-            if value < 0:
-                raise ValueError("VALUE ERROR", "Please provide a positive integer value")
-        except ValueError as value_err:
-            err_type, message = value_err.args
-            print(f"{err_type}: {message}")
-            return
-
+        if value < 0:
+            raise ValueError()
         self._bet = value
         return self._bet
 
