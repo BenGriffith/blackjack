@@ -1,8 +1,9 @@
-class Dealer:
+class Player:
 
     def __init__(self):
         self._score = 0
-        self._hand = []
+        self._bet = 0
+        self.hand = []
 
     @property
     def score(self):
@@ -10,27 +11,15 @@ class Dealer:
 
     @score.setter
     def score(self, value):
-        if value < 0:
-            print("Value should be greater than 0")
+        try:
+            if value < 0:
+                raise ValueError("VALUE ERROR", "Value should be greater than 0")
+        except ValueError as value_err:
+            err_type, message = value_err.args
+            print(f"{err_type}: {message}")
             return
         self._score += value
         return self._score
-
-    @property
-    def hand(self):
-        return self._hand
-
-    @hand.setter
-    def hand(self, card):
-        self._hand.append(card)
-        return self._hand
-
-
-class Player(Dealer):
-
-    def __init__(self):
-        super().__init__()
-        self._bet = 0
 
     @property
     def bet(self):
@@ -38,11 +27,37 @@ class Player(Dealer):
 
     @bet.setter
     def bet(self, value):
-        if not isinstance(value, int):
-            print("Please provide an integer value")
+        try:
+            if not isinstance(value, int):
+                raise TypeError("TYPE ERROR", "Please provide an integer value")
+        except TypeError as type_err:
+            err_type, message = type_err.args
+            print(f"{err_type}: {message}")
             return
-        if value < 0:
-            print("Please provide a positive integer value")
+
+        try:
+            if value < 0:
+                raise ValueError("VALUE ERROR", "Please provide a positive integer value")
+        except ValueError as value_err:
+            err_type, message = value_err.args
+            print(f"{err_type}: {message}")
             return
+
         self._bet = value
         return self._bet
+
+    def deal_card(self, deck, action):
+        action(deck, self).hit()
+
+    def __str__(self):
+        return f"{self.__class__.__name__}"
+
+
+class Dealer(Player):
+
+    def __init__(self):
+        Player.__init__(self)
+
+    @property
+    def bet(self):
+        raise AttributeError("Dealer cannot place a bet")

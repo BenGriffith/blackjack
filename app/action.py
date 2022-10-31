@@ -1,17 +1,11 @@
 class Action:
 
-    def __init__(self, deck, player, dealer):
+    def __init__(self, deck, person):
         self.deck = deck
-        self.player = player
-        self.dealer = dealer
+        self.person = person
 
-    def hit(self, individual):
-        card = self.deck.cards.pop()
-        if individual == "player":
-            self.player.hand = card
-        else:
-            self.dealer.hand = card
-        return
+    def hit(self):
+        self.person.hand.append(self.deck.cards.pop())
 
     def stand(self):
         pass
@@ -19,4 +13,3 @@ class Action:
     def double_down(self):
         self.player.bet = self.player.bet * self.player.bet
         self.hit()
-        return
