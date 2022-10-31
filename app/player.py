@@ -12,7 +12,7 @@ class Player:
     @score.setter
     def score(self, value):
         if value < 0:
-            raise ValueError()
+            raise ValueError("VALUE ERROR", "Value should be greater than 0")
         self._score += value
         return self._score
 
@@ -23,10 +23,10 @@ class Player:
     @bet.setter
     def bet(self, value):
         if not isinstance(value, int):
-            raise TypeError()
+            raise TypeError("TYPE ERROR", "Please provide an integer value")
 
         if value < 0:
-            raise ValueError()
+            raise ValueError("VALUE ERROR", "Please provide a positive integer value")
         self._bet = value
         return self._bet
 
