@@ -7,6 +7,14 @@ class Card:
     suit: str
     rank: str
 
+    def card_value(self):
+        if self.rank in "J Q K".split():
+            return 10
+        elif self.rank == "A":
+            return (1, 11)
+        else:
+            return int(self.rank)
+
     def __repr__(self):
         return f"{self.__class__.__name__}({self.suit}, {self.rank})"
 
