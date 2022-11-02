@@ -22,8 +22,10 @@ class Player:
 
     @bet.setter
     def bet(self, value):
-        if not isinstance(value, int):
-            raise TypeError("TYPE ERROR", "Please provide an integer value")
+        try:
+            value = int(value)
+        except ValueError as val_err:
+            raise ValueError("VALUE ERROR", "Please provide an integer value")
 
         if value < 0:
             raise ValueError("VALUE ERROR", "Please provide a positive integer value")
