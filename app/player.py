@@ -36,7 +36,12 @@ class Player:
         action(deck, self).hit()
 
     def __str__(self):
-        return f"{self.__class__.__name__}"
+        stats = (
+            f"{self.__class__.__name__} Bet: {self.bet}\n"
+            f"{self.__class__.__name__} Score: {self.score}\n"
+            f"{self.__class__.__name__} Hand: {self.hand}"
+        )
+        return stats
 
 
 class Dealer(Player):
