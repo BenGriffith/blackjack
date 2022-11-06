@@ -15,7 +15,7 @@ class Card:
         else:
             return int(self.rank)
 
-    def __repr__(self):
+    def __str__(self):
         return f"{self.__class__.__name__}({self.suit}, {self.rank})"
 
 
@@ -34,5 +34,5 @@ class Deck:
         shuffle(deck)
         self.cards = deck
 
-    def __repr__(self):        
-        return f"{self.__class__.__name__}({', '.join(card.__repr__() for card in self.cards)})"
+    def __str__(self):        
+        return f"{self.__class__.__name__}({', '.join(card.__str__() for card in self.cards)})"
