@@ -49,6 +49,13 @@ class Dealer(Player):
     def __init__(self):
         Player.__init__(self)
 
+    def __str__(self):
+        stats = (
+            f"{self.__class__.__name__} Score: {self.score}\n"
+            f"{self.__class__.__name__} Hand: {', '.join(f'({card.suit.title()}, {card.rank})' for card in self.hand)}"
+        )
+        return stats
+
     @property
     def bet(self):
         raise AttributeError("Dealer cannot place a bet")
