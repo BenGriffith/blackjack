@@ -1,42 +1,37 @@
-"""
-Greeting
-Player places bet
-Dealer deals one card up to each player
-Dealer deals one card up to themself
-Dealer deals one more card up to each player
-Dealer deals one cards face down to themself
-Check player totals to see if anyone has scored 21
+from time import sleep
 
-video: https://www.youtube.com/watch?v=eyoh-Ku9TCI
-"""
+BLACKJACK = 21
 
 
 class Game:
 
-    def __init__(self, Deck, Dealer, Player, Action):
-        self.deck = Deck()
-        self.dealer = Dealer()
-        self.player = Player()
-        self.action = Action(self.deck, self.player, self.dealer)
+    def __init__(self, deck, dealer, player, Action):
+        self.deck = deck
+        self.dealer = dealer
+        self.player = player
+        self.action = Action
 
-    def greeting(self):
-        start_game = input("Welcome to Blackjack! Would you like to play a game? ")
-        if start_game == "yes":
-            self.bet()
+    def start(self):
+        try:
+            greeting = input("Welcome to Blackjack! Would you like to play a game? [yes/no] ").lower()
+            if greeting not in ["yes", "y", "no", "n"]:
+                raise ValueError("VALUE ERROR", "Please enter an acceptable value")
+        except ValueError as val_err:
+            err_type, message = val_err.args
+            print(f"{err_type}: {message}\n")
+            self.start()
         else:
-            return
+            if greeting in ["yes", "y"]:
+                self.place_bet()
+            else:
+                print("Thanks for stopping by! Hope to see you again soon!")
 
-    def bet(self):
-        initial_bet = input("How much money would you like to bet? ")
-        self.player.bet = initial_bet
-        self.first_round()
-
-    def first_round(self):
-        self.action.hit("player")
-        self.action.hit("dealer")
-        self.action.hit("player")
-        self.action.hit("dealer")
-        self.check_total()
-
-    def check_total(self):
-        pass
+    def place_bet(self):
+        try:
+            self.player.bet = input("How much money would you like to bet? ")
+        except ValueError as val_err:
+            err_type, message = val_err.args
+            print(f"{err_type}: {message}\n")
+            return self.place_bet()
+        else:
+            self.first_round()
