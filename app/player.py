@@ -39,7 +39,7 @@ class Player:
         stats = (
             f"{self.__class__.__name__} Bet: {self.bet}\n"
             f"{self.__class__.__name__} Score: {self.score}\n"
-            f"{self.__class__.__name__} Hand: {self.hand}"
+            f"{self.__class__.__name__} Hand: {', '.join(f'({card.suit.title()}, {card.rank})' for card in self.hand)}"
         )
         return stats
 
