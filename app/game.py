@@ -1,6 +1,8 @@
 from time import sleep
 
 BLACKJACK = 21
+PRIZE = 2
+DEAL_DELAY = 2
 
 
 class Game:
@@ -13,18 +15,18 @@ class Game:
 
     def start(self):
         try:
-            greeting = input("Welcome to Blackjack! Would you like to play a game? [yes/no] ").lower()
-            if greeting not in ["yes", "y", "no", "n"]:
+            start_game = input("Welcome to Blackjack! Would you like to play a game? [yes/no] ").lower()
+            if start_game not in ["yes", "y", "no", "n"]:
                 raise ValueError("VALUE ERROR", "Please enter an acceptable value")
         except ValueError as val_err:
             err_type, message = val_err.args
             print(f"{err_type}: {message}\n")
             self.start()
         else:
-            if greeting in ["yes", "y"]:
-                self.place_bet()
+            if start_game in ["yes", "y"]:
+                return self.place_bet()
             else:
-                print("Thanks for stopping by! Hope to see you again soon!")
+                return start_game
 
     def place_bet(self):
         try:
@@ -34,4 +36,109 @@ class Game:
             print(f"{err_type}: {message}\n")
             return self.place_bet()
         else:
-            self.first_round()
+            return self._first_round()
+
+    def _deal_card_message(self, person, time):
+        print(f"Dealing {person.__class__.__name__} Card...")
+        sleep(time)
+
+    def _first_round(self):
+        self._deal_card_message(self.player, DEAL_DELAY)
+        self.player.deal_card(self.deck, self.action)
+
+        self._deal_card_message(self.dealer, DEAL_DELAY)
+        self.dealer.deal_card(self.deck, self.action)
+        dealer_status_first_card = self.dealer.__str__()
+
+        self._deal_card_message(self.player, DEAL_DELAY)
+        self.player.deal_card(self.deck, self.action)
+
+        self._deal_card_message(self.dealer, DEAL_DELAY)
+        self.dealer.deal_card(self.deck, self.action)
+
+        print("\nResults after Round 1")
+        print("---------------")
+        print(self.player)
+        print(dealer_status_first_card, "\n")
+
+        return self._process_blackjack_check(self.player, self._blackjack_check(self.player))
+
+    def _blackjack_check(self, person):
+        if person.score == BLACKJACK:
+            return "blackjack"
+        elif person.score > BLACKJACK:
+            return "bust"
+        else:
+            return "less"
+
+    def _process_blackjack_check(self, person, result):
+        if person.__class__.__name__ == "Player":
+            if result == "blackjack":
+                self.player.bet = self.player.bet * PRIZE
+                print(f"Congratulations! You scored Blackjack and win ${self.player.bet}!")
+            elif result == "bust":
+                print("BUST! House wins!")
+            else:
+                return self._second_round()
+
+        if person.__class__.__name__ == "Dealer":
+            if result == "blackjack":
+                print("House scored Blackjack! You lose!")
+            elif result == "bust":
+                self.player.bet = self.player.bet * PRIZE
+                print(f"BUST! Congratulations! You win ${self.player.bet}!")
+            else:
+                return self._compare_hands()
+
+    def _second_round(self):
+        try:
+            player_action = input("Would you like another card? [hit/stay] ").lower()
+            if player_action not in ["hit", "h", "stay", "s"]:
+                raise ValueError("VALUE ERROR", "Please enter an acceptable value")
+        except ValueError as val_err:
+            err_type, message = val_err.args
+            print(f"{err_type}: {message}\n")
+            self._second_round()
+        else:
+            if player_action in ["hit", "h"]:
+                self._deal_card_message(self.player, DEAL_DELAY)
+                self.player.deal_card(self.deck, self.action)
+                print(self.player, "\n")
+                return self._process_blackjack_check(self.player, self._blackjack_check(self.player))
+            else:
+                return self._process_dealer_hand()
+
+    def _process_dealer_hand(self):
+        print(self.dealer, "\n")
+        if self.dealer.score < 16:
+            self._deal_card_message(self.dealer, DEAL_DELAY)
+            self.dealer.deal_card(self.deck, self.action)
+            return self._process_dealer_hand()
+        return self._process_blackjack_check(self.dealer, self._blackjack_check(self.dealer))
+
+    def _compare_hands(self):
+        print("Final Result")
+        print("---------------")
+        print(self.player)
+        print(self.dealer, "\n")
+        if self.player.score > self.dealer.score:
+            self.player.bet = self.player.bet * PRIZE
+            print(f"Congratulations! You win ${self.player.bet}!")
+        elif self.player.score == self.dealer.score:
+            print("Tie!")
+        else:
+            print("Bummer! House wins!")
+        
+    def new_game(self):
+        try:
+            next_game = input("Thanks for playing! Would you like to play another game? [yes/no] ").lower()
+            if next_game not in ["yes", "y", "no", "n"]:
+                raise ValueError("VALUE ERROR", "Please enter an acceptable value")
+        except ValueError as val_err:
+            err_type, message = val_err.args
+            print(f"{err_type}: {message}\n")
+            self.new_game()
+        else:
+            if next_game in ["yes", "y"]:
+                return True
+            return False
