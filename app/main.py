@@ -3,6 +3,8 @@ from player import Dealer, Player
 from action import Action
 from game import Game
 
+from game import NO
+
 
 def main(play_again):
     deck = Deck()
@@ -10,14 +12,15 @@ def main(play_again):
     player = Player()
 
     game = Game(deck, dealer, player, Action)
+    
     if play_again:
         print("\nWelcome back! Let's play another game!")
         game.place_bet()
         if game.new_game():
             return main(True)
     else:
-        if game.start() not in ["no", "n"]:
-            if game.new_game():
+        if game.start() not in NO:
+            if game.new_game(): 
                 return main(True)
 
     print("Hope to see you again soon!")
