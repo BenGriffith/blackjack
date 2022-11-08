@@ -1,8 +1,13 @@
 from time import sleep
 
+YES = ["YES", "Y"]
+NO = ["NO", "N"]
+HIT = ["HIT", "H"]
+STAY = ["STAY", "S"]
 BLACKJACK = 21
 PRIZE = 2
 DEAL_DELAY = 2
+DEALER_SCORE_MIN = 16
 
 
 class Game:
@@ -15,15 +20,15 @@ class Game:
 
     def start(self):
         try:
-            start_game = input("Welcome to Blackjack! Would you like to play a game? [yes/no] ").lower()
-            if start_game not in ["yes", "y", "no", "n"]:
+            start_game = input("Welcome to Blackjack! Would you like to play a game? [yes/no] ").upper()
+            if start_game not in YES + NO:
                 raise ValueError("VALUE ERROR", "Please enter an acceptable value")
         except ValueError as val_err:
             err_type, message = val_err.args
             print(f"{err_type}: {message}\n")
             self.start()
         else:
-            if start_game in ["yes", "y"]:
+            if start_game in YES:
                 return self.place_bet()
             else:
                 return start_game
@@ -61,7 +66,8 @@ class Game:
         print(self.player)
         print(dealer_status_first_card, "\n")
 
-        return self._process_blackjack_check(self.player, self._blackjack_check(self.player))
+        blackjack_check_result = self._blackjack_check(self.player)
+        return self._process_blackjack_check(self.player, blackjack_check_result)
 
     def _blackjack_check(self, person):
         if person.score == BLACKJACK:
@@ -92,53 +98,59 @@ class Game:
 
     def _second_round(self):
         try:
-            player_action = input("Would you like another card? [hit/stay] ").lower()
-            if player_action not in ["hit", "h", "stay", "s"]:
+            player_action = input("Would you like another card? [hit/stay] ").upper()
+            if player_action not in HIT + STAY:
                 raise ValueError("VALUE ERROR", "Please enter an acceptable value")
         except ValueError as val_err:
             err_type, message = val_err.args
             print(f"{err_type}: {message}\n")
             self._second_round()
         else:
-            if player_action in ["hit", "h"]:
+            if player_action in HIT:
                 self._deal_card_message(self.player, DEAL_DELAY)
                 self.player.deal_card(self.deck, self.action)
+
                 print(self.player, "\n")
-                return self._process_blackjack_check(self.player, self._blackjack_check(self.player))
+                
+                blackjack_check_result = self._blackjack_check(self.player)
+                return self._process_blackjack_check(self.player, blackjack_check_result)
             else:
                 return self._process_dealer_hand()
 
     def _process_dealer_hand(self):
         print(self.dealer, "\n")
-        if self.dealer.score < 16:
+        
+        if self.dealer.score < DEALER_SCORE_MIN:
             self._deal_card_message(self.dealer, DEAL_DELAY)
             self.dealer.deal_card(self.deck, self.action)
             return self._process_dealer_hand()
-        return self._process_blackjack_check(self.dealer, self._blackjack_check(self.dealer))
+        blackjack_check_result = self._blackjack_check(self.dealer)
+        return self._process_blackjack_check(self.dealer, blackjack_check_result)
 
     def _compare_hands(self):
         print("Final Result")
         print("---------------")
         print(self.player)
         print(self.dealer, "\n")
+
         if self.player.score > self.dealer.score:
             self.player.bet = self.player.bet * PRIZE
             print(f"Congratulations! You win ${self.player.bet}!")
         elif self.player.score == self.dealer.score:
-            print("Tie!")
+            print("Keep your money. We have a Tie!")
         else:
             print("Bummer! House wins!")
         
     def new_game(self):
         try:
-            next_game = input("Thanks for playing! Would you like to play another game? [yes/no] ").lower()
-            if next_game not in ["yes", "y", "no", "n"]:
+            next_game = input("Thanks for playing! Would you like to play another game? [yes/no] ").upper()
+            if next_game not in YES + NO:
                 raise ValueError("VALUE ERROR", "Please enter an acceptable value")
         except ValueError as val_err:
             err_type, message = val_err.args
             print(f"{err_type}: {message}\n")
             self.new_game()
         else:
-            if next_game in ["yes", "y"]:
+            if next_game in YES:
                 return True
             return False
