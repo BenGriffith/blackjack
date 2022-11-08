@@ -22,6 +22,3 @@ class Action:
             _card_value = self._set_ace(_card_value)
         self.person.score = _card_value
         self.person.hand.append(card)
-
-    def stand(self):
-        pass
