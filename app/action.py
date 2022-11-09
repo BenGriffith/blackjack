@@ -1,4 +1,4 @@
-from game import BLACKJACK
+from app.game import BLACKJACK
 
 
 class Action:
