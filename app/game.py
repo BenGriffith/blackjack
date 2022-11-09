@@ -6,7 +6,7 @@ HIT = ["HIT", "H"]
 STAY = ["STAY", "S"]
 BLACKJACK = 21
 PRIZE = 2
-DEAL_DELAY = 2
+GAME_DELAY = 2
 DEALER_SCORE_MIN = 16
 
 
@@ -26,12 +26,13 @@ class Game:
         except ValueError as val_err:
             err_type, message = val_err.args
             print(f"{err_type}: {message}\n")
-            self.start()
+            return self.start()
         else:
             if start_game in YES:
-                return self.place_bet()
+                self.place_bet()
+                return True
             else:
-                return start_game
+                return False
 
     def place_bet(self):
         try:
@@ -48,17 +49,17 @@ class Game:
         sleep(time)
 
     def _first_round(self):
-        self._deal_card_message(self.player, DEAL_DELAY)
+        self._deal_card_message(self.player, GAME_DELAY)
         self.player.deal_card(self.deck, self.action)
 
-        self._deal_card_message(self.dealer, DEAL_DELAY)
+        self._deal_card_message(self.dealer, GAME_DELAY)
         self.dealer.deal_card(self.deck, self.action)
         dealer_status_first_card = self.dealer.__str__()
 
-        self._deal_card_message(self.player, DEAL_DELAY)
+        self._deal_card_message(self.player, GAME_DELAY)
         self.player.deal_card(self.deck, self.action)
 
-        self._deal_card_message(self.dealer, DEAL_DELAY)
+        self._deal_card_message(self.dealer, GAME_DELAY)
         self.dealer.deal_card(self.deck, self.action)
 
         print("\nResults after Round 1")
@@ -104,10 +105,10 @@ class Game:
         except ValueError as val_err:
             err_type, message = val_err.args
             print(f"{err_type}: {message}\n")
-            self._second_round()
+            return self._second_round()
         else:
             if player_action in HIT:
-                self._deal_card_message(self.player, DEAL_DELAY)
+                self._deal_card_message(self.player, GAME_DELAY)
                 self.player.deal_card(self.deck, self.action)
 
                 print(self.player, "\n")
@@ -121,7 +122,7 @@ class Game:
         print(self.dealer, "\n")
         
         if self.dealer.score < DEALER_SCORE_MIN:
-            self._deal_card_message(self.dealer, DEAL_DELAY)
+            self._deal_card_message(self.dealer, GAME_DELAY)
             self.dealer.deal_card(self.deck, self.action)
             return self._process_dealer_hand()
         blackjack_check_result = self._blackjack_check(self.dealer)
@@ -142,14 +143,15 @@ class Game:
             print("Bummer! House wins!")
         
     def new_game(self):
+        sleep(GAME_DELAY)
         try:
-            next_game = input("Thanks for playing! Would you like to play another game? [yes/no] ").upper()
+            next_game = input("\nThanks for playing! Would you like to play another game? [yes/no] ").upper()
             if next_game not in YES + NO:
                 raise ValueError("VALUE ERROR", "Please enter an acceptable value")
         except ValueError as val_err:
             err_type, message = val_err.args
             print(f"{err_type}: {message}\n")
-            self.new_game()
+            return self.new_game()
         else:
             if next_game in YES:
                 return True
