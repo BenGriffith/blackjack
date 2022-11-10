@@ -1,8 +1,9 @@
 import pytest
 
-from app.deck import Deck
+from app.deck import Card, Deck
 from app.player import Player
 from app.action import Action
+
 
 @pytest.fixture
 def deck():
@@ -16,41 +17,65 @@ def player():
 
 @pytest.fixture
 def hit(deck, player):
-    return Action("hit", deck, player)
+    return Action(deck, player)
 
 @pytest.fixture
-def double_down(deck, player):
-    return Action("double down", deck, player)
+def deck_with_ace_eleven(deck):
+    cards = [
+        Card("spades", "A"),
+        Card("clubs", "9"),
+        Card("diamonds", "4"),
+    ]
+    deck.cards.clear()
+    deck.cards = cards
+    return deck   
+
+@pytest.fixture
+def deck_with_ace_one(deck):
+    cards = [
+        Card("hearts", "A"),
+        Card("clubs", "8"),
+        Card("diamonds", "10"),
+    ]
+    deck.cards.clear()
+    deck.cards = cards
+    return deck
 
 
 def test_valid_hit(hit, deck, player):
     player_action = hit
     assert player_action.deck == deck
-    assert player_action.player == player
-    assert player_action.player.bet == 10
-    assert player_action.player.score == 0
-    assert player_action.player.hand == []
+    assert player_action.person == player
+    assert player_action.person.bet == 10
+    assert player_action.person.score == 0
+    assert player_action.person.hand == []
     
     player_action.hit()
-    assert player_action.player.hand == player.hand
+    assert player_action.person.hand == player.hand
     assert len(player.hand) == 1
 
 
-def test_valid_double_down(double_down, deck, player):
-    player_action = double_down
-    assert player_action.deck == deck
-    assert player_action.player == player
-    assert player_action.player.bet == 10
-    assert player_action.player.hand == []
+def test_set_ace_eleven(deck_with_ace_eleven, player):
+    player_action = Action(deck_with_ace_eleven, player)
+    player_action.hit()
+    assert player.score == 4
+    assert player.hand == [Card("diamonds", "4")]
+    player_action.hit()
+    assert player.score == 13
+    assert player.hand == [Card("diamonds", "4"), Card("clubs", "9")]
+    player_action.hit()
+    assert player.score == 14
+    assert player.hand == [Card("diamonds", "4"), Card("clubs", "9"), Card("spades", "A")]
 
-    player_action.double_down()
-    assert player_action.player.bet == player.bet
-    assert player.bet == 100
-    assert player_action.player.hand == player.hand
-    assert len(player.hand) == 1
 
-
-def test_invalid_action(deck, player, capsys):
-    player_action = Action("stay", deck, player)
-    captured = capsys.readouterr()
-    assert captured.out == "Please choose either hit, stand or double down\n"
+def test_set_ace_one(deck_with_ace_one, player):
+    player_action = Action(deck_with_ace_one, player)
+    player_action.hit()
+    assert player.score == 10
+    assert player.hand == [Card("diamonds", "10")]
+    player_action.hit()
+    assert player.score == 18
+    assert player.hand == [Card("diamonds", "10"), Card("clubs", "8")]
+    player_action.hit()
+    assert player.score == 19
+    assert player.hand == [Card("diamonds", "10"), Card("clubs", "8"), Card("hearts", "A")]
