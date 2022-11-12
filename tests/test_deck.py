@@ -2,7 +2,7 @@ from dataclasses import FrozenInstanceError
 
 import pytest
 
-from app.deck import Card, Deck
+from blackjack.deck import Card, Deck
 
 
 @pytest.fixture

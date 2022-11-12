@@ -48,6 +48,12 @@ class Game:
         print(f"Dealing {person.__class__.__name__} Card...")
         sleep(time)
 
+    def _final_result_message(self):
+        print("\nFinal Result")
+        print("---------------")
+        print(self.player)
+        print(self.dealer, "\n")
+
     def _first_round(self):
         self._deal_card_message(self.player, GAME_DELAY)
         self.player.deal_card(self.deck, self.action)
@@ -81,17 +87,21 @@ class Game:
     def _process_blackjack_check(self, person, result):
         if person.__class__.__name__ == "Player":
             if result == "blackjack":
+                self._final_result_message()
                 self.player.bet = self.player.bet * PRIZE
                 print(f"Congratulations! You scored Blackjack and win ${self.player.bet}!")
             elif result == "bust":
+                self._final_result_message()
                 print("BUST! House wins!")
             else:
                 return self._second_round()
 
         if person.__class__.__name__ == "Dealer":
             if result == "blackjack":
+                self._final_result_message()
                 print("House scored Blackjack! You lose!")
             elif result == "bust":
+                self._final_result_message()
                 self.player.bet = self.player.bet * PRIZE
                 print(f"BUST! Congratulations! You win ${self.player.bet}!")
             else:
@@ -119,27 +129,28 @@ class Game:
                 return self._process_dealer_hand()
 
     def _process_dealer_hand(self):
-        print(self.dealer, "\n")
-        
         if self.dealer.score < DEALER_SCORE_MIN:
+            if self.dealer.score > self.player.score:
+                self._final_result_message()
+                return
             self._deal_card_message(self.dealer, GAME_DELAY)
             self.dealer.deal_card(self.deck, self.action)
+            print(self.dealer)
             return self._process_dealer_hand()
         blackjack_check_result = self._blackjack_check(self.dealer)
         return self._process_blackjack_check(self.dealer, blackjack_check_result)
 
     def _compare_hands(self):
-        print("Final Result")
-        print("---------------")
-        print(self.player)
-        print(self.dealer, "\n")
 
         if self.player.score > self.dealer.score:
+            self._final_result_message()
             self.player.bet = self.player.bet * PRIZE
             print(f"Congratulations! You win ${self.player.bet}!")
         elif self.player.score == self.dealer.score:
+            self._final_result_message()
             print("Keep your money. We have a Tie!")
         else:
+            self._final_result_message()
             print("Bummer! House wins!")
         
     def new_game(self):

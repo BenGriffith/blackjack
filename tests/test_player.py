@@ -1,8 +1,8 @@
 import pytest
 
-from app.player import Dealer, Player
-from app.deck import Card, Deck
-from app.action import Action
+from blackjack.player import Dealer, Player
+from blackjack.deck import Card, Deck
+from blackjack.action import Action
 
 
 @pytest.fixture
