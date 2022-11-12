@@ -22,8 +22,10 @@ class Player:
 
     @bet.setter
     def bet(self, value):
-        if not isinstance(value, int):
-            raise TypeError("TYPE ERROR", "Please provide an integer value")
+        try:
+            value = int(value)
+        except ValueError as val_err:
+            raise ValueError("VALUE ERROR", "Please provide an integer value")
 
         if value < 0:
             raise ValueError("VALUE ERROR", "Please provide a positive integer value")
@@ -34,13 +36,25 @@ class Player:
         action(deck, self).hit()
 
     def __str__(self):
-        return f"{self.__class__.__name__}"
+        stats = (
+            f"{self.__class__.__name__} Bet: {self.bet}\n"
+            f"{self.__class__.__name__} Score: {self.score}\n"
+            f"{self.__class__.__name__} Hand: {', '.join(f'({card.suit.title()}, {card.rank})' for card in self.hand)}"
+        )
+        return stats
 
 
 class Dealer(Player):
 
     def __init__(self):
         Player.__init__(self)
+
+    def __str__(self):
+        stats = (
+            f"{self.__class__.__name__} Score: {self.score}\n"
+            f"{self.__class__.__name__} Hand: {', '.join(f'({card.suit.title()}, {card.rank})' for card in self.hand)}"
+        )
+        return stats
 
     @property
     def bet(self):

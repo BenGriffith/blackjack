@@ -79,8 +79,8 @@ def test_player_invalid_score(player):
 
 
 def test_player_invalid_bet(player):
-    with pytest.raises(TypeError):
-        player.bet = "1"
+    with pytest.raises(ValueError):
+        player.bet = "ten"
 
     with pytest.raises(ValueError):
         player.bet = -10
