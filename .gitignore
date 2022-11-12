@@ -3,3 +3,5 @@ include/
 lib/
 tests/.pytest_cache
 pyvenv.cfg
+*.egg-info
+.pytest_cache
