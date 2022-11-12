@@ -1,9 +1,9 @@
 from time import sleep
 
-from app.deck import Deck
-from app.player import Dealer, Player
-from app.action import Action
-from app.game import Game, GAME_DELAY
+from blackjack.deck import Deck
+from blackjack.player import Dealer, Player
+from blackjack.action import Action
+from blackjack.game import Game, GAME_DELAY
 
 
 def main(play_again):
@@ -14,7 +14,7 @@ def main(play_again):
     game = Game(deck, dealer, player, Action)
     if play_again:
         sleep(GAME_DELAY)
-        print("\nWelcome back! Let's play another game!")
+        print("\nWELCOME BACK! Let's play another game!")
         game.place_bet()
         if game.new_game():
             return main(True)
