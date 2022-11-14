@@ -1,4 +1,5 @@
 attrs==22.1.0
+-e git+https://github.com/BenGriffith/blackjack.git@3e6142686a1d5df774b50236505eb4868c732c03#egg=BLACKJACK
 iniconfig==1.1.1
 packaging==21.3
 pluggy==1.0.0
