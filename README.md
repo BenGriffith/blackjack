@@ -15,4 +15,6 @@ At the end of each game, the `Player` is asked if they would like to play again.
 To run this project, follow the steps below:
 ```
 $ git clone https://github.com/BenGriffith/blackjack.git
+$ cd blackjack
+$ pip install -r requirements.txt
 $ python blackjack
