@@ -1,17 +1,15 @@
 import pytest
 
-from blackjack.player import Dealer, Player
-from blackjack.deck import Card, Deck
-from blackjack.action import Action
+from .context import blackjack
 
 
 @pytest.fixture
 def deck():
-    return Deck()
+    return blackjack.Deck()
 
 @pytest.fixture
 def dealer():
-    return Dealer()
+    return blackjack.Dealer()
 
 @pytest.fixture
 def dealer_one(dealer):
@@ -21,7 +19,7 @@ def dealer_one(dealer):
 
 @pytest.fixture
 def player():
-    return Player()
+    return blackjack.Player()
 
 @pytest.fixture
 def player_one(player):
@@ -40,10 +38,10 @@ def test_dealer_valid_update(dealer_one, deck):
     last_card = deck.cards[-1]
     assert len(deck.cards) == 52
     assert dealer_one.score == 5
-    dealer_one.deal_card(deck, Action)
+    dealer_one.deal_card(deck, blackjack.Action)
     assert dealer_one.hand[0] == last_card
     assert len(dealer_one.hand) == 1
-    assert isinstance(dealer_one.hand[0], Card) == True
+    assert isinstance(dealer_one.hand[0], blackjack.Card) == True
 
 
 def test_dealer_invalid_score(dealer):
@@ -67,10 +65,10 @@ def test_player_valid_update(player_one, deck):
     assert len(deck.cards) == 52
     assert player_one.score == 10
     assert player_one.bet == 10
-    player_one.deal_card(deck, Action)
+    player_one.deal_card(deck, blackjack.Action)
     assert player_one.hand[0] == last_card
     assert len(player_one.hand) == 1
-    assert isinstance(player_one.hand[0], Card) == True
+    assert isinstance(player_one.hand[0], blackjack.Card) == True
 
 
 def test_player_invalid_score(player):

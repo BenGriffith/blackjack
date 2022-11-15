@@ -12,9 +12,9 @@ If `Player` wins at Blackjack, they earn 2x their initial bet.
 At the end of each game, the `Player` is asked if they would like to play again.
 
 ## Setup
-To run this project, follow the steps below:
+To run this project, setup your virtual environment and then follow the steps below:
 ```
 $ git clone https://github.com/BenGriffith/blackjack.git
 $ cd blackjack
 $ pip install -r requirements.txt
-$ python blackjack
+$ python -m blackjack
