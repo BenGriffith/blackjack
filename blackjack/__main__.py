@@ -2,7 +2,6 @@ from time import sleep
 
 from blackjack.deck import Deck
 from blackjack.player import Dealer, Player
-from blackjack.action import Action
 from blackjack.game import Game, GAME_DELAY
 
 
@@ -11,7 +10,7 @@ def main(play_again):
     dealer = Dealer()
     player = Player()
 
-    game = Game(deck, dealer, player, Action)
+    game = Game(deck, dealer, player)
     if play_again:
         sleep(GAME_DELAY)
         print("\nWELCOME BACK! Let's play another game!")
