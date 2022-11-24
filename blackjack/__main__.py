@@ -1,8 +1,6 @@
-from time import sleep
-
 from blackjack.deck import Deck
 from blackjack.player import Dealer, Player
-from blackjack.game import Game, GAME_DELAY
+from blackjack.game import Game
 
 
 def main(play_again):
@@ -11,17 +9,9 @@ def main(play_again):
     player = Player()
 
     game = Game(deck, dealer, player)
-    if play_again:
-        sleep(GAME_DELAY)
-        print("\nWELCOME BACK! Let's play another game!")
-        game.place_bet()
-        if game.new_game():
-            return main(True)
-    else:
-        if game.start():
-            if game.new_game():
-                return main(True)
-
+    new_game = game.start(play_again) if play_again else game.start()
+    if new_game:
+        return main(new_game)
     print("Hope to see you again soon!")
 
 
