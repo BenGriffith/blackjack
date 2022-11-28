@@ -25,7 +25,7 @@ class Player:
     def bet(self, value):
         try:
             value = int(value)
-        except ValueError as val_err:
+        except ValueError:
             raise ValueError("VALUE ERROR", "Please provide an integer value")
 
         if value < 0:
