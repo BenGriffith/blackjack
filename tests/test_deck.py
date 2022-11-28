@@ -11,7 +11,7 @@ def card():
 
 @pytest.fixture
 def number_cards():
-    return "2 3 4 5 6 7 8 9 10".split()
+    return range(2, 11)
 
 @pytest.fixture
 def deck():
@@ -31,7 +31,7 @@ def test_card_value(number_cards):
     ace = blackjack.Card("hearts", "A")
     assert ace.card_value() == (1, 11)
 
-    assert [i for i in range(2, 11)] == [blackjack.Card("hearts", num).card_value() for num in number_cards]
+    assert list(range(2, 11)) == [blackjack.Card("hearts", num).card_value() for num in number_cards]
 
 
 def test_card_mutability_error():
