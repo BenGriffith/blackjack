@@ -50,6 +50,22 @@ def final_round(player_one_card, dealer_one_card):
     return message
 
 
+def test_place_invalid_bet(monkeypatch, game):
+    # invalid bet
+    with pytest.raises(ValueError):
+        monkeypatch.setattr("builtins.input", lambda _: "ten")
+        bet = input("How much would you like to bet? ")
+        game.player.bet = bet
+
+
+def test_place_valid_bet(monkeypatch, game):
+    # valid bet
+    monkeypatch.setattr("builtins.input", lambda _: 10)
+    bet = input("How much money would you like to bet? ")
+    game.player.bet = bet
+    assert game.player.bet == 10
+
+
 def test_deal_card_message(capsys, game, player, dealer):
     game._deal_card_message(player, 0)
     captured = capsys.readouterr()
@@ -81,27 +97,48 @@ def test_player_action_stay_first_check(game):
     assert game._player_action_stay() == None
 
 
+def test_player_action_stay_second_check(capsys, game):
+    dealer_card_one = blackjack.Card("hearts", "10")
+    dealer_card_two = blackjack.Card("hearts", "5")
+    game.dealer.hand.append(dealer_card_one)
+    game.dealer.hand.append(dealer_card_two)
+    game.dealer.score = 15
+    game.player.score = 17
+    assert len(game.dealer.hand) == 2
+    assert game.dealer.score < blackjack.DEALER_SCORE_MIN
+    game._player_action_stay()
+    captured = capsys.readouterr()
+    assert captured.out == f"Dealing Dealer Card...\n{game.dealer}\n"
+    assert len(game.dealer.hand) == 3
+    assert game.dealer.score > blackjack.DEALER_SCORE_MIN
 
 
-# def test_game_start(monkeypatch, game):
-#     monkeypatch.setattr("builtins.input", lambda _: "")
+def test_process_blackjack_player(capsys, game):
+    # blackjack
+    game.player.bet = 10
+    game.player.score = 21
+    game._process_blackjack(game.player)
+    captured = capsys.readouterr()
 
-# def test_game_prompt(capsys, monkeypatch, game):
+    result_message = (
+        "\nFinal Result\n"
+        "---------------\n"
+        f"{game.player}\n"
+        f"{game.dealer}\n\n"
+    )
 
-#     game.start()
-#     captured = capsys.readouterr()
-#     print(captured.out)
-#     assert False
+    assert captured.out == f"{result_message}Congratulations! You scored Blackjack and win ${game.player.bet * blackjack.PRIZE}!\n"
+    
+    # bust
+    game.player.score = 1
+    game._process_blackjack(game.player)
+    captured = capsys.readouterr()
 
+    result_message = (
+        "\nFinal Result\n"
+        "---------------\n"
+        f"{game.player}\n"
+        f"{game.dealer}\n\n"
+    )
 
-# def test_place_valid_bet(monkeypatch, game, player):
-#     monkeypatch.setattr("builtins.input", lambda _: 10)
-#     bet = input("How much would you like to bet? ")
-#     player.bet = bet
-#     assert player.bet == 10
-
-#def test_place_invalid_bet(monkeypatch, game, player):
-    #with pytest.raises(ValueError):
-    #    monkeypatch.setattr("builtins.input", lambda _: "ten")
-
-        
+    assert captured.out == f"{result_message}BUST! House wins!\n"
