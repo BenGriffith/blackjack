@@ -79,8 +79,7 @@ class Game:
         if person.kind == PLAYER:
             if person.score == BLACKJACK:
                 self._result_message()
-                self.player.bet = self.player.bet * PRIZE
-                print(f"Congratulations! You scored Blackjack and win ${self.player.bet}!")            
+                print(f"Congratulations! You scored Blackjack and win ${self.player.bet * PRIZE}!")            
             elif person.score > BLACKJACK:
                 self._result_message()
                 print("BUST! House wins!")
@@ -93,8 +92,7 @@ class Game:
                 print("House scored Blackjack! You lose!")
             elif person.score > BLACKJACK:
                 self._result_message()
-                self.player.bet = self.player.bet * PRIZE
-                print(f"BUST! Congratulations! You win ${self.player.bet}!")
+                print(f"BUST! Congratulations! You win ${self.player.bet * PRIZE}!")
             else:
                 self._compare_hands()
 
@@ -135,8 +133,7 @@ class Game:
     def _compare_hands(self):
         if self.player.score > self.dealer.score:
             self._result_message()
-            self.player.bet = self.player.bet * PRIZE
-            print(f"Congratulations! You win ${self.player.bet}!")
+            print(f"Congratulations! You win ${self.player.bet * PRIZE}!")
         elif self.player.score == self.dealer.score:
             self._result_message()
             print("Keep your money. We have a Tie!")
@@ -155,6 +152,4 @@ class Game:
             print(f"{err_type}: {message}\n")
             self.new_game()
         else:
-            if next_game in YES:
-                return True
-            return False
+            return next_game in YES
