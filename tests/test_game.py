@@ -142,3 +142,108 @@ def test_process_blackjack_player(capsys, game):
     )
 
     assert captured.out == f"{result_message}BUST! House wins!\n"
+
+
+def test_process_blackjack_dealer(capsys, game):
+    # blackjack
+    game.dealer.score = 21
+    game._process_blackjack(game.dealer)
+    captured = capsys.readouterr()
+
+    result_message = (
+        "\nFinal Result\n"
+        "---------------\n"
+        f"{game.player}\n"
+        f"{game.dealer}\n\n"
+    )
+
+    assert captured.out == f"{result_message}House scored Blackjack! You lose!\n"
+    
+    # bust
+    game.player.bet = 1000
+    game.dealer.score = 22
+    game._process_blackjack(game.dealer)
+    captured = capsys.readouterr()
+
+    result_message = (
+        "\nFinal Result\n"
+        "---------------\n"
+        f"{game.player}\n"
+        f"{game.dealer}\n\n"
+    )
+
+    assert captured.out == f"{result_message}BUST! Congratulations! You win ${game.player.bet * blackjack.PRIZE}!\n"
+
+
+def test_player_action_prompt(monkeypatch):
+    # invalid
+    with pytest.raises(ValueError):
+        monkeypatch.setattr("builtins.input", lambda _: "double down")
+        player_action = input("Would you like another card? [hit/stay] ").upper()
+        if player_action not in blackjack.HIT + blackjack.STAY:
+            raise ValueError
+
+
+def test_compare_hands(capsys, game):
+    # scenario 1: player.score > dealer.score
+    game.player.bet = 1000
+    game.player.score = 18
+    game.dealer.score = 17
+    game._compare_hands()
+
+    result_message = (
+        "\nFinal Result\n"
+        "---------------\n"
+        f"{game.player}\n"
+        f"{game.dealer}\n\n"
+    )
+
+    captured = capsys.readouterr()
+    assert captured.out == f"{result_message}Congratulations! You win ${game.player.bet * blackjack.PRIZE}!\n"
+
+    # scenario 2: player.score == dealer.score
+    game.dealer.score = 1
+    game._compare_hands()
+
+    result_message = (
+        "\nFinal Result\n"
+        "---------------\n"
+        f"{game.player}\n"
+        f"{game.dealer}\n\n"
+    )
+
+    captured = capsys.readouterr()
+    assert captured.out == f"{result_message}Keep your money. We have a Tie!\n"
+
+    # scenario 3: dealer.score > player.score
+    game.dealer.score = 1
+    game._compare_hands()
+
+    result_message = (
+        "\nFinal Result\n"
+        "---------------\n"
+        f"{game.player}\n"
+        f"{game.dealer}\n\n"
+    )
+
+    captured = capsys.readouterr()
+    assert captured.out == f"{result_message}Bummer! House wins!\n"
+
+
+def test_new_game(monkeypatch, game):
+    # invalid
+    with pytest.raises(ValueError):
+        monkeypatch.setattr("builtins.input", lambda _: "never")
+        next_game = input("Thanks for playing! Would you like to play another game? [yes/no] ").upper()
+        if next_game not in blackjack.YES + blackjack.NO:
+            raise ValueError
+
+    # valid - play again
+    monkeypatch.setattr("builtins.input", lambda _: "yes")
+    next_game = input("Thanks for playing! Would you like to play another game? [yes/no] ").upper()
+    assert game.new_game() == True
+
+    # valid - do not play again
+    monkeypatch.setattr("builtins.input", lambda _: "no")
+    next_game = input("Thanks for playing! Would you like to play another game? [yes/no] ").upper()
+    assert game.new_game() == False
