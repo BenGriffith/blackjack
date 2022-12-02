@@ -2,12 +2,12 @@ from dataclasses import FrozenInstanceError
 
 import pytest
 
-from .context import blackjack
+from blackjack.deck import Card, Deck
 
 
 @pytest.fixture
 def card():
-    return blackjack.Card("hearts", "5")
+    return Card("hearts", "5")
 
 @pytest.fixture
 def number_cards():
@@ -15,7 +15,7 @@ def number_cards():
 
 @pytest.fixture
 def deck():
-    return blackjack.Deck()
+    return Deck()
 
 
 def test_card(card):
@@ -25,18 +25,18 @@ def test_card(card):
 
 
 def test_card_value(number_cards):
-    face_card = blackjack.Card("hearts", "J")
+    face_card = Card("hearts", "J")
     assert face_card.card_value() == 10
 
-    ace = blackjack.Card("hearts", "A")
+    ace = Card("hearts", "A")
     assert ace.card_value() == (1, 11)
 
-    assert list(range(2, 11)) == [blackjack.Card("hearts", num).card_value() for num in number_cards]
+    assert list(range(2, 11)) == [Card("hearts", num).card_value() for num in number_cards]
 
 
 def test_card_mutability_error():
     with pytest.raises(FrozenInstanceError):
-        card = blackjack.Card("clubs", "2")
+        card = Card("clubs", "2")
         card.rank = "3"
 
 

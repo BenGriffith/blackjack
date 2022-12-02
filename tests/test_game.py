@@ -1,33 +1,37 @@
 import pytest
 
-from .context import blackjack
+from blackjack.deck import Deck, Card
+from blackjack.player import Player, Dealer
+from blackjack.action import Action
+from blackjack.game import Game
+from blackjack.game_setup import *
 
 
 @pytest.fixture
 def deck():
-    return blackjack.Deck()
+    return Deck()
 
 @pytest.fixture
 def dealer():
-    return blackjack.Dealer()
+    return Dealer()
 
 @pytest.fixture
 def dealer_one_card(deck, dealer):
-    dealer.deal_card(deck, blackjack.Action)
+    dealer.deal_card(deck, Action)
     return dealer
 
 @pytest.fixture
 def player():
-    return blackjack.Player()
+    return Player()
 
 @pytest.fixture
 def player_one_card(deck, player):
-    player.deal_card(deck, blackjack.Action)
+    player.deal_card(deck, Action)
     return player
 
 @pytest.fixture
 def game(deck, dealer, player):
-    return blackjack.Game(deck, dealer, player)
+    return Game(deck, dealer, player)
 
 @pytest.fixture()
 def first_round(player_one_card, dealer_one_card):
@@ -98,19 +102,19 @@ def test_player_action_stay_first_check(game):
 
 
 def test_player_action_stay_second_check(capsys, game):
-    dealer_card_one = blackjack.Card("hearts", "10")
-    dealer_card_two = blackjack.Card("hearts", "5")
+    dealer_card_one = Card("hearts", "10")
+    dealer_card_two = Card("hearts", "5")
     game.dealer.hand.append(dealer_card_one)
     game.dealer.hand.append(dealer_card_two)
     game.dealer.score = 15
     game.player.score = 17
     assert len(game.dealer.hand) == 2
-    assert game.dealer.score < blackjack.DEALER_SCORE_MIN
+    assert game.dealer.score < DEALER_SCORE_MIN
     game._player_action_stay()
     captured = capsys.readouterr()
     assert captured.out == f"Dealing Dealer Card...\n{game.dealer}\n"
     assert len(game.dealer.hand) == 3
-    assert game.dealer.score > blackjack.DEALER_SCORE_MIN
+    assert game.dealer.score > DEALER_SCORE_MIN
 
 
 def test_process_blackjack_player(capsys, game):
@@ -127,7 +131,7 @@ def test_process_blackjack_player(capsys, game):
         f"{game.dealer}\n\n"
     )
 
-    assert captured.out == f"{result_message}Congratulations! You scored Blackjack and win ${game.player.bet * blackjack.PRIZE}!\n"
+    assert captured.out == f"{result_message}Congratulations! You scored Blackjack and win ${game.player.bet * PRIZE}!\n"
     
     # bust
     game.player.score = 1
@@ -172,7 +176,7 @@ def test_process_blackjack_dealer(capsys, game):
         f"{game.dealer}\n\n"
     )
 
-    assert captured.out == f"{result_message}BUST! Congratulations! You win ${game.player.bet * blackjack.PRIZE}!\n"
+    assert captured.out == f"{result_message}BUST! Congratulations! You win ${game.player.bet * PRIZE}!\n"
 
 
 def test_player_action_prompt(monkeypatch):
@@ -180,7 +184,7 @@ def test_player_action_prompt(monkeypatch):
     with pytest.raises(ValueError):
         monkeypatch.setattr("builtins.input", lambda _: "double down")
         player_action = input("Would you like another card? [hit/stay] ").upper()
-        if player_action not in blackjack.HIT + blackjack.STAY:
+        if player_action not in HIT + STAY:
             raise ValueError
 
 
@@ -199,7 +203,7 @@ def test_compare_hands(capsys, game):
     )
 
     captured = capsys.readouterr()
-    assert captured.out == f"{result_message}Congratulations! You win ${game.player.bet * blackjack.PRIZE}!\n"
+    assert captured.out == f"{result_message}Congratulations! You win ${game.player.bet * PRIZE}!\n"
 
     # scenario 2: player.score == dealer.score
     game.dealer.score = 1
@@ -235,7 +239,7 @@ def test_new_game(monkeypatch, game):
     with pytest.raises(ValueError):
         monkeypatch.setattr("builtins.input", lambda _: "never")
         next_game = input("Thanks for playing! Would you like to play another game? [yes/no] ").upper()
-        if next_game not in blackjack.YES + blackjack.NO:
+        if next_game not in YES + NO:
             raise ValueError
 
     # valid - play again

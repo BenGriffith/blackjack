@@ -1,6 +1,3 @@
-from enum import Enum
-
-
 YES = ["YES", "Y"]
 NO = ["NO", "N"]
 HIT = ["HIT", "H"]
