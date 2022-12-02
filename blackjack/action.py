@@ -1,4 +1,4 @@
-from blackjack.game import BLACKJACK
+from blackjack.game_setup import BLACKJACK
 
 
 class Action:
