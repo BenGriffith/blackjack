@@ -131,14 +131,12 @@ class Game:
                 self._process_blackjack(self.dealer)
     
     def _compare_hands(self):
+        self._result_message()
         if self.player.score > self.dealer.score:
-            self._result_message()
             print(f"Congratulations! You win ${self.player.bet * PRIZE}!")
         elif self.player.score == self.dealer.score:
-            self._result_message()
             print("Keep your money. We have a Tie!")
         else:
-            self._result_message()
             print("Bummer! House wins!")
         
     def new_game(self):

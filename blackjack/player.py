@@ -4,7 +4,7 @@ class Player:
         self._score = 0
         self._bet = 0
         self.hand = []
-        self._kind = self.__class__.__name__
+        self.kind = self.__class__.__name__
 
     @property
     def score(self):
@@ -32,10 +32,6 @@ class Player:
             raise ValueError("VALUE ERROR", "Please provide a positive integer value")
         self._bet = value
         return self._bet
-
-    @property
-    def kind(self):
-        return self._kind
 
     def deal_card(self, deck, action):
         action(deck, self).hit()
