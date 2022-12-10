@@ -13,6 +13,7 @@ from blackjack.game_setup import (
     PLAYER,
     DEALER,
 )
+from blackjack.exceptions import InvalidResponseException
 
 
 class Game:
@@ -41,9 +42,8 @@ class Game:
     def place_bet(self):
         try:
             self.player.bet = input("How much money would you like to bet? ")
-        except ValueError as val_err:
-            err_type, message = val_err.args
-            print(f"{err_type}: {message}\n")
+        except Exception as err:
+            print(f"ERROR - {err}\n")
             self.place_bet()
         else:
             self._first_round()
@@ -117,10 +117,9 @@ class Game:
         try:
             player_action = input("Would you like another card? [hit/stay] ").upper()
             if player_action not in HIT + STAY:
-                raise ValueError("VALUE ERROR", "Please enter an acceptable value")
-        except ValueError as val_err:
-            err_type, message = val_err.args
-            print(f"{err_type}: {message}\n")
+                raise InvalidResponseException
+        except InvalidResponseException as err:
+            print(f"{err}\n")
             self._second_round()
         else:
             if player_action in HIT:
@@ -131,14 +130,12 @@ class Game:
                 self._process_blackjack(self.dealer)
     
     def _compare_hands(self):
+        self._result_message()
         if self.player.score > self.dealer.score:
-            self._result_message()
             print(f"Congratulations! You win ${self.player.bet * PRIZE}!")
         elif self.player.score == self.dealer.score:
-            self._result_message()
             print("Keep your money. We have a Tie!")
         else:
-            self._result_message()
             print("Bummer! House wins!")
         
     def new_game(self):
@@ -146,10 +143,9 @@ class Game:
         try:
             next_game = input("\nThanks for playing! Would you like to play another game? [yes/no] ").upper()
             if next_game not in YES + NO:
-                raise ValueError("VALUE ERROR", "Please enter an acceptable value")
-        except ValueError as val_err:
-            err_type, message = val_err.args
-            print(f"{err_type}: {message}\n")
+                raise InvalidResponseException
+        except InvalidResponseException as err:
+            print(f"{err}\n")
             self.new_game()
         else:
             return next_game in YES

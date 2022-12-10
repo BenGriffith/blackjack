@@ -3,6 +3,7 @@ import pytest
 from blackjack.player import Dealer, Player
 from blackjack.deck import Card, Deck
 from blackjack.action import Action
+from blackjack.exceptions import InvalidBetException, InvalidScoreException
 
 
 @pytest.fixture
@@ -47,7 +48,7 @@ def test_dealer_valid_update(dealer_one, deck):
 
 
 def test_dealer_invalid_score(dealer):
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidScoreException):
         dealer.score = -10
 
 
@@ -74,7 +75,7 @@ def test_player_valid_update(player_one, deck):
 
 
 def test_player_invalid_score(player):
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidScoreException):
         player.score = -10
 
 
@@ -82,5 +83,5 @@ def test_player_invalid_bet(player):
     with pytest.raises(ValueError):
         player.bet = "ten"
 
-    with pytest.raises(ValueError):
+    with pytest.raises(InvalidBetException):
         player.bet = -10

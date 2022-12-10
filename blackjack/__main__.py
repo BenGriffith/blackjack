@@ -9,7 +9,7 @@ def main(play_again):
     player = Player()
 
     game = Game(deck, dealer, player)
-    new_game = game.start(play_again) if play_again else game.start()
+    new_game = game.start(play_again)
     if new_game:
         return main(new_game)
     print("Hope to see you again soon!")

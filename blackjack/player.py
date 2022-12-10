@@ -1,10 +1,12 @@
+from blackjack.exceptions import InvalidBetException, InvalidScoreException
+
 class Player:
 
     def __init__(self):
         self._score = 0
         self._bet = 0
         self.hand = []
-        self._kind = self.__class__.__name__
+        self.kind = self.__class__.__name__
 
     @property
     def score(self):
@@ -13,7 +15,7 @@ class Player:
     @score.setter
     def score(self, value):
         if value < 0:
-            raise ValueError("VALUE ERROR", "Value should be greater than 0")
+            raise InvalidScoreException
         self._score += value
         return self._score
 
@@ -23,19 +25,11 @@ class Player:
 
     @bet.setter
     def bet(self, value):
-        try:
-            value = int(value)
-        except ValueError:
-            raise ValueError("VALUE ERROR", "Please provide an integer value")
-
+        value = int(value)
         if value < 0:
-            raise ValueError("VALUE ERROR", "Please provide a positive integer value")
+            raise InvalidBetException
         self._bet = value
         return self._bet
-
-    @property
-    def kind(self):
-        return self._kind
 
     def deal_card(self, deck, action):
         action(deck, self).hit()
