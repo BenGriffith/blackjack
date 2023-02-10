@@ -1,0 +1,25 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "play-blackjack"
+authors = [
+  {name = "Ben Griffith"}
+]
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = ["License :: OSI Approved :: MIT License"]
+keywords = ["blackjack", "games", "cards"]
+dynamic = ["version", "description"]
+
+[tool.flit.module]
+name = "blackjack"
+
+[project.optional-dependencies]
+test = [
+  "pytest",
+]
+
+[project.urls]
+Source = "https://github.com/bengriffith/blackjack"
