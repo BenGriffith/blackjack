@@ -14,6 +14,11 @@ At the end of each game, the `Player` is asked if they would like to play again.
 ## Setup
 To run this project, follow the steps below:
 ```
+$ pip install play-blackjack
+$ python -m blackjack
+```
+Alternatively:
+```
 $ git clone https://github.com/BenGriffith/blackjack.git
 $ cd blackjack
 $ python3 -m virtualenv venv
